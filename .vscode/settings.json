@@ -1,0 +1,13 @@
+{
+  "workbench.startupEditor": "none",
+  "files.autoSave": "afterDelay",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "terminal.integrated.persistentSessionReviveProcess": "onExit",
+  "terminal.integrated.splitCwd": "workspaceRoot",
+  "git.autofetch": true
+}
