@@ -29,7 +29,7 @@ export default function Home() {
         </div>
 
         <h1>
-          The Golden Curtain
+          The Guardians
           <span>Guarding hope. Empowering change.</span>
         </h1>
         <p className="gc-sub">
