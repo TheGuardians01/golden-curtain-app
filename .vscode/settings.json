@@ -9,5 +9,6 @@
   },
   "terminal.integrated.persistentSessionReviveProcess": "onExit",
   "terminal.integrated.splitCwd": "workspaceRoot",
-  "git.autofetch": true
+  "git.autofetch": true,
+  "terminal.integrated.shellIntegration.enabled": null
 }
