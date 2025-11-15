@@ -31,7 +31,6 @@ export default function Home() {
 
             <p className="gc-sub">
               A donation-first platform where everyday people become Guardians for one another.
-              It&apos;s simple. Transparent flows. Real help you can actually see.
             </p>
 
             <div className="gc-actions">
