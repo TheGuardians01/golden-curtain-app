@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -189,7 +189,7 @@ export default function HomePage() {
               GC
             </span>
           </div>
-          <div className="leading-tight hidden sm:block">
+          <div className="hidden leading-tight sm:block">
             <p className="text-[11px] font-semibold text-zinc-100">
               The Golden Curtain
             </p>
