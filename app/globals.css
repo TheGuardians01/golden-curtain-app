@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* globals.css — base palette + minimal styles */
 :root{
   --gc-gold:#F6C344;
