@@ -31,17 +31,12 @@ a:hover{opacity:.9}
 
 .gc-wrap{max-width:1100px; margin:0 auto; padding:24px}
 
-.gc-header{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:8px 0 24px;
-}
 .gc-badge{
   font-family:var(--font-display);
   letter-spacing:.3px; font-weight:700; font-size:14px;
   background:linear-gradient(90deg,var(--gc-gold),var(--gc-amber));
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
-.gc-nav{display:flex; gap:20px; align-items:center}
 .gc-cta{padding:8px 14px; border:1px solid rgba(255,255,255,.15); border-radius:999px}
 
 .gc-hero{
