@@ -1,33 +1,25 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import ClipCard from "./components/ClipCard";
+import GamesPlaceholder from "./components/GamesPlaceholder";
+import SideNav from "./components/SideNav";
+import TopNav from "./components/TopNav";
+import { Clip, FeedTab, FeedTabDefinition } from "@/lib/types";
 
 /**
  * Golden Curtain — TikTok-style home feed with our own spin.
- * - Full-screen vertical feed with snap scrolling
- * - Autoplay/pause via IntersectionObserver
- * - Global mute toggle
- * - Top nav similar to TikTok web (logo, tabs, search, actions)
- * - Right action rail (like/comment/share/profile)
- * - Left info panel (title, description, tag, music)
- * - "Impact Meter" unique to Golden Curtain
+ *
+ * This version adds support for multiple tabs (For You, Following, Guardians, Spotlight, Games)
+ * so you can expand beyond a single feed. The current tab is tracked in state and the
+ * content is conditionally rendered based on the selected tab. When the "Games" tab is
+ * selected, a placeholder message is shown. You can replace this with your live games
+ * implementation later. "Spotlight" clips are filtered from the mock data based on
+ * arbitrary criteria (e.g. number of likes) to demonstrate how you might highlight
+ * top-performing content.
  */
 
-type Clip = {
-  id: number;
-  tag: string;
-  title: string;
-  description: string;
-  author: string;
-  username: string;
-  music: string;
-  likes: number;
-  comments: number;
-  shares: number;
-  src?: string; // optional demo video
-  poster?: string; // optional poster
-};
-
+// Demo clip data. Replace with real API calls when available.
 const mockClips: Clip[] = [
   {
     id: 1,
@@ -91,13 +83,37 @@ const mockClips: Clip[] = [
   },
 ];
 
+const tabs: FeedTabDefinition[] = [
+  { id: "forYou", label: "For You", icon: "🏠" },
+  { id: "following", label: "Following", icon: "👥" },
+  { id: "guardians", label: "Guardians", icon: "⭐" },
+  { id: "spotlight", label: "Spotlight", icon: "🎬" },
+  { id: "games", label: "Games", icon: "🎮" },
+];
+
 export default function HomePage() {
+  // Audio and like state
   const [muted, setMuted] = useState(true);
   const [liked, setLiked] = useState<Record<number, boolean>>({});
   const [likesCount, setLikesCount] = useState<Record<number, number>>(
     Object.fromEntries(mockClips.map((c) => [c.id, c.likes]))
   );
 
+  // Current selected tab
+  const [currentTab, setCurrentTab] = useState<FeedTab>("forYou");
+
+  // Derived data for spotlight. Here we simply pick the most liked clips.
+  const spotlightClips = mockClips.filter((c) => c.likes > 10000);
+
+  // Determine which clips to render based on the selected tab
+  const clipsToShow: Clip[] =
+    currentTab === 'spotlight'
+      ? spotlightClips
+      : currentTab === 'games'
+      ? []
+      : mockClips;
+
+  // Refs for feed and videos
   const feedRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<Map<number, HTMLVideoElement | null>>(new Map());
 
@@ -148,16 +164,16 @@ export default function HomePage() {
     const onKey = (e: KeyboardEvent) => {
       if (!feedRef.current) return;
       const delta = feedRef.current.clientHeight;
-      if (e.key === "ArrowDown" || e.key === "PageDown") {
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
         e.preventDefault();
-        feedRef.current.scrollBy({ top: delta, behavior: "smooth" });
-      } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+        feedRef.current.scrollBy({ top: delta, behavior: 'smooth' });
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
         e.preventDefault();
-        feedRef.current.scrollBy({ top: -delta, behavior: "smooth" });
+        feedRef.current.scrollBy({ top: -delta, behavior: 'smooth' });
       }
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, []);
 
   const toggleLike = (id: number) => {
@@ -180,227 +196,56 @@ export default function HomePage() {
 
   return (
     <main className="h-screen w-screen overflow-hidden bg-black text-zinc-50">
-      {/* Top nav — TikTok style */}
-      <header className="flex h-14 w-full items-center justify-between border-b border-zinc-800 bg-zinc-950/95 px-4 text-sm">
-        {/* Left: logo + brand */}
-        <div className="flex items-center gap-2">
-          <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-600 shadow-[0_0_18px_rgba(250,204,21,0.8)]">
-            <span className="text-[9px] font-black tracking-[0.18em] text-black">
-              GC
-            </span>
-          </div>
-          <div className="hidden leading-tight sm:block">
-            <p className="text-[11px] font-semibold text-zinc-100">
-              The Golden Curtain
-            </p>
-            <p className="text-[10px] text-zinc-400">
-              Guardians · Not Followers
-            </p>
-          </div>
-        </div>
-
-        {/* Center: For You / Following tabs */}
-        <div className="hidden items-center gap-4 sm:flex">
-          <button className="text-[13px] font-semibold text-zinc-50">
-            For You
-          </button>
-          <button className="text-[13px] text-zinc-400 hover:text-zinc-100">
-            Following
-          </button>
-        </div>
-
-        {/* Right: search + actions */}
-        <div className="flex items-center gap-3">
-          <div className="hidden items-center gap-2 rounded-full border border-zinc-700 bg-zinc-900/80 px-3 py-1.5 text-[11px] text-zinc-300 sm:flex">
-            <span className="text-zinc-500">🔍</span>
-            <span className="text-[11px] text-zinc-400">
-              Search Guardians, stories, missions...
-            </span>
-          </div>
-          <button
-            onClick={() => setMuted((m) => !m)}
-            className="hidden rounded-full border border-zinc-700 bg-zinc-900/80 px-3 py-1.5 text-[11px] text-zinc-200 hover:border-amber-400/80 hover:text-amber-100 sm:block"
-          >
-            {muted ? "🔇 Sound Off" : "🔊 Sound On"}
-          </button>
-          <button className="hidden items-center gap-1 rounded-md bg-amber-400 px-3 py-1.5 text-[11px] font-semibold text-black shadow-[0_0_18px_rgba(250,204,21,0.7)] hover:brightness-110 sm:flex">
-            ⊕ Upload
-          </button>
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-800 text-[12px]">
-            J
-          </div>
-        </div>
-      </header>
+      <TopNav
+        tabs={tabs}
+        currentTab={currentTab}
+        onSelectTab={setCurrentTab}
+        muted={muted}
+        onToggleMute={() => setMuted((m) => !m)}
+      />
 
       {/* Main content: left nav + feed like TikTok web */}
       <div className="flex h-[calc(100vh-56px)] w-full">
-        {/* Left sidebar (like TikTok nav) */}
-        <aside className="hidden h-full w-52 flex-col border-r border-zinc-900 bg-zinc-950/95 px-3 py-4 text-[13px] text-zinc-200 md:flex">
-          <button className="flex items-center gap-3 rounded-lg bg-zinc-900 px-2 py-2 font-semibold text-zinc-50">
-            <span>🏠</span>
-            <span>For You</span>
-          </button>
-          <button className="mt-1 flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-zinc-900">
-            <span>👥</span>
-            <span>Following</span>
-          </button>
-          <button className="mt-1 flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-zinc-900">
-            <span>⭐</span>
-            <span>Guardians</span>
-          </button>
-          <div className="mt-4 border-t border-zinc-900 pt-3 text-[11px] text-zinc-500">
-            Built for real humans. Every swipe is a vote for someone&apos;s
-            comeback story.
-          </div>
-        </aside>
+        <SideNav tabs={tabs} currentTab={currentTab} onSelectTab={setCurrentTab} />
 
-        {/* Feed */}
+        {/* Feed or games placeholder */}
         <section className="relative flex-1 bg-black">
           <div
             ref={feedRef}
             className="flex h-full w-full snap-y snap-mandatory flex-col overflow-y-auto"
-            style={{ scrollbarWidth: "none" }}
+            style={{ scrollbarWidth: 'none' }}
           >
-            {mockClips.map((clip, idx) => {
-              const impact = Math.min(
-                1,
-                (likesCount[clip.id] + clip.shares) / 25000
-              );
-              return (
-                <article
-                  key={clip.id}
-                  className="relative flex h-full w-full snap-start items-center justify-center bg-black"
-                >
-                  {/* Video column */}
-                  <div className="relative flex h-[80vh] w-full max-w-3xl items-center justify-center md:h-[86vh]">
-                    {/* Video or gradient placeholder */}
-                    {clip.src ? (
-                      <video
-                        ref={setVideoRef(clip.id)}
-                        className="h-full w-[60%] min-w-[260px] max-w-[420px] rounded-2xl bg-black object-cover md:w-[55%]"
-                        playsInline
-                        loop
-                        muted
-                        poster={clip.poster}
-                        onClick={() => togglePlay(clip.id)}
-                      >
-                        <source src={clip.src} />
-                      </video>
-                    ) : (
-                      <div
-                        onClick={() => togglePlay(clip.id)}
-                        className="relative h-full w-[60%] min-w-[260px] max-w-[420px] cursor-pointer rounded-2xl bg-gradient-to-b from-amber-500/40 via-zinc-900 to-black md:w-[55%]"
-                      >
-                        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(250,204,21,0.35),_transparent_55%),_radial-gradient(circle_at_bottom,_rgba(0,0,0,0.9),_transparent_60%)]" />
-                        <div className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center text-[11px] text-amber-100/90">
-                          Tap to play · Scroll for more
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Right rail */}
-                    <div className="absolute right-2 flex h-full flex-col items-center justify-end gap-3 pb-6 pr-1 text-[11px] md:right-6">
-                      {/* Profile */}
-                      <div className="flex flex-col items-center gap-1">
-                        <div className="h-11 w-11 rounded-full bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-600 ring-2 ring-amber-300/70 shadow-[0_0_20px_rgba(250,204,21,0.7)]" />
-                        <span className="max-w-[70px] truncate text-[10px] text-zinc-200/90">
-                          {clip.username}
-                        </span>
-                      </div>
-
-                      {/* Like */}
-                      <button
-                        onClick={() => toggleLike(clip.id)}
-                        className={`flex h-11 w-11 items-center justify-center rounded-full border ${
-                          liked[clip.id]
-                            ? "border-amber-300 bg-amber-400 text-black"
-                            : "border-zinc-700/80 bg-black/70 text-amber-100"
-                        } shadow hover:brightness-110 active:translate-y-[1px]`}
-                        aria-pressed={!!liked[clip.id]}
-                        aria-label="Like"
-                      >
-                        ❤
-                      </button>
-                      <span className="text-zinc-200 text-[10px]">
-                        {Intl.NumberFormat().format(likesCount[clip.id] ?? 0)}
-                      </span>
-
-                      {/* Comment */}
-                      <button className="flex h-11 w-11 items-center justify-center rounded-full border border-zinc-700/80 bg-black/70 text-amber-100 shadow hover:brightness-110 active:translate-y-[1px]">
-                        💬
-                      </button>
-                      <span className="text-zinc-200 text-[10px]">
-                        {Intl.NumberFormat().format(clip.comments)}
-                      </span>
-
-                      {/* Share */}
-                      <button className="flex h-11 w-11 items-center justify-center rounded-full border border-zinc-700/80 bg-black/70 text-amber-100 shadow hover:brightness-110 active:translate-y-[1px]">
-                        ⤴
-                      </button>
-                      <span className="text-zinc-200 text-[10px]">
-                        {Intl.NumberFormat().format(clip.shares)}
-                      </span>
-
-                      {/* Sound toggle */}
-                      <button
-                        onClick={() => setMuted((m) => !m)}
-                        className="mt-2 flex h-11 w-11 items-center justify-center rounded-full border border-zinc-700/80 bg-black/70 text-amber-100 shadow hover:brightness-110 active:translate-y-[1px]"
-                        aria-label="Toggle sound"
-                      >
-                        {muted ? "🔇" : "🔊"}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Caption + Impact panel underneath (like TikTok web) */}
-                  <div className="absolute bottom-0 left-1/2 flex w-full max-w-3xl -translate-x-1/2 flex-col gap-1 px-4 pb-4 text-[13px] md:px-0">
-                    <div className="flex items-center gap-2 text-[12px] font-semibold">
-                      <span className="text-zinc-50">@{clip.author}</span>
-                      <span className="rounded-full bg-zinc-800 px-2 py-[1px] text-[10px] uppercase tracking-[0.16em] text-amber-200/90">
-                        {clip.tag}
-                      </span>
-                    </div>
-                    <p className="max-w-2xl text-[13px] text-zinc-100">
-                      {clip.title} — {clip.description}
-                    </p>
-                    <div className="mt-1 flex items-center gap-2 text-[11px] text-amber-100/90">
-                      <span>♫</span>
-                      <span className="truncate">{clip.music}</span>
-                    </div>
-                    {/* Impact meter */}
-                    <div className="mt-2 max-w-md">
-                      <div className="mb-1 flex items-center justify-between text-[10px] text-zinc-400">
-                        <span>Impact Meter</span>
-                        <span>{Math.round(impact * 100)}%</span>
-                      </div>
-                      <div className="h-2 w-full overflow-hidden rounded-full border border-amber-400/50 bg-black/60">
-                        <div
-                          className="h-full bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 shadow-[0_0_20px_rgba(250,204,21,0.75)]"
-                          style={{ width: `${impact * 100}%` }}
-                        />
-                      </div>
-                      <p className="mt-1 text-[10px] text-zinc-500">
-                        Every view fuels micro-grants & verified aid — built
-                        into the system, not bolted on.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Swipe hint for first card */}
-                  {idx === 0 && (
-                    <div className="pointer-events-none absolute left-1/2 top-16 -translate-x-1/2 rounded-full bg-black/70 px-3 py-1 text-[11px] text-amber-200/90">
-                      Scroll to move through the Curtain.
-                    </div>
-                  )}
-                </article>
-              );
-            })}
+            {currentTab === 'games' ? (
+              <GamesPlaceholder />
+            ) : (
+              clipsToShow.map((clip, idx) => {
+                const currentLikes = likesCount[clip.id] ?? clip.likes;
+                const impact = Math.min(1, (currentLikes + clip.shares) / 25000);
+                return (
+                  <ClipCard
+                    key={clip.id}
+                    clip={clip}
+                    index={idx}
+                    liked={!!liked[clip.id]}
+                    likesCount={currentLikes}
+                    muted={muted}
+                    impact={impact}
+                    showSwipeHint={idx === 0 && currentTab !== 'games'}
+                    onToggleLike={toggleLike}
+                    onTogglePlay={togglePlay}
+                    onToggleSound={() => setMuted((m) => !m)}
+                    setVideoRef={setVideoRef(clip.id)}
+                  />
+                );
+              })
+            )}
 
             {/* End-of-feed footer */}
-            <div className="flex h-40 w-full items-center justify-center border-t border-zinc-900 bg-zinc-950/95 px-4 text-center text-[12px] text-zinc-400">
-              You&apos;re early. This prototype feed will soon feature real
-              Guardians, real stories, and real impact.
-            </div>
+            {currentTab !== 'games' && (
+              <div className="flex h-40 w-full items-center justify-center border-t border-zinc-900 bg-zinc-950/95 px-4 text-center text-[12px] text-zinc-400">
+                You're early. This prototype feed will soon feature real Guardians, real stories, and real impact.
+              </div>
+            )}
           </div>
         </section>
       </div>
