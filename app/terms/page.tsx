@@ -31,7 +31,7 @@ export default function Terms() {
       </p>
       <h2>Disclaimer</h2>
       <p>
-        The Platform is provided “as is” without warranties of any kind. To the maximum extent permitted by law, we disclaim all warranties and limit liability.
+        The Platform is provided “as is” without warranties of any kind. To the maximum extent permitted by law, we DISCLAIM all warranties and limit liability.
       </p>
       <h2>Contact</h2>
       <p>
