@@ -230,7 +230,7 @@ export default function HomePage() {
                     likesCount={currentLikes}
                     muted={muted}
                     impact={impact}
-                    showSwipeHint={idx === 0 && currentTab !== 'games'}
+                    showSwipeHint={idx === 0}
                     onToggleLike={toggleLike}
                     onTogglePlay={togglePlay}
                     onToggleSound={() => setMuted((m) => !m)}
