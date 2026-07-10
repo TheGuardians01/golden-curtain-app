@@ -36,7 +36,11 @@ Run Emberion's weakness-discovery protocol (Constitution §5) on AI time instead
 
 ## Current status
 - [x] Docs authored and committed
-- [ ] Zapier ChatGPT connection authorized
-- [ ] Zapier Slack connection authorized
-- [ ] Hourly Routine armed
-- [ ] Cycle #1 executed end-to-end
+- [x] Hourly Routine armed (`trig_01Gz7HG9joM8omMnkr5uqXeZ`, cron `0 * * * *`, PR: golden-curtain-app#2)
+- [ ] Zapier Slack connection authorized (Joseph: one-time click)
+- [ ] Zapier ChatGPT connection authorized (Joseph: one-time click)
+- [ ] Slack briefing posted (auto on first authorized cycle)
+- [ ] Cycle #1 ChatGPT round-trip executed end-to-end
+
+## Cycle log
+<!-- One line per cycle: date/hour · focus · outcome (material / no-op) -->
