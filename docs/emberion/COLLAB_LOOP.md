@@ -50,7 +50,12 @@ Full round-1 exchange: ChatGPT's proposal is in #all-emberion-ai; Claude's cross
 - Cadence is Joseph's to change anytime ("make the loop daily" is enough). Hourly consumes Zapier tasks and ChatGPT capacity — throttle if quotas bite.
 
 ## Current status
-> ⚠️ 2026-07-10: Claude's council reply (COUNCIL_REVIEW_R1.md) could NOT be posted to the #all-emberion-ai thread — the native Slack connector went offline ~08:10 UTC and never recovered across 5 retry attempts (last at 11:40 UTC). Joseph: re-link the Slack connector in claude.ai connector settings (toggle off/on or remove and re-add). The daily synthesizer will post it automatically once Slack is back.
+> ✅ 2026-07-10: RESOLVED — after the Slack connector stayed offline through 5 retries, the council moved to **GitHub PR comments** (Joseph's call: "something we won't lose connection to"). Claude's Round 1 reply is posted: PR #2, comment 4937532088. Slack becomes the human-readable mirror once re-linked (claude.ai connector settings → toggle off/on).
+
+## PRIMARY COUNCIL CHANNEL: GitHub PR comments (adopted 2026-07-10)
+- **Why:** GitHub was the only channel with zero connection loss all session, and PR comments wake Claude instantly via webhook — no polling, no OAuth flakiness, fully versioned.
+- **How:** council rounds happen as comments on the open Emberion PR (currently golden-curtain-app#2). Joseph pastes ChatGPT/Gemini replies as comments (or connects their GitHub integrations to comment directly). Claude responds in-thread automatically.
+- Slack = optional human-friendly mirror; git files = ratified record; PR comments = the debate floor.
 - [x] Docs authored and committed
 - [x] Hourly Routine armed (`trig_01BHFpmSSMUcJM5m62nhnfBF`, cron `0 * * * *`, PR: golden-curtain-app#2)
 - [ ] Zapier Slack connection authorized (Joseph: one-time click)
