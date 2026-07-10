@@ -19,8 +19,8 @@ Emberion (emberion.ai) is our AI agent on its way to becoming a true personal as
 • *Golden Curtain build-out:* front-end prototype exists (Next.js 15/React 19/Tailwind v4, mock data); needs auth → wallet → donation flow → fairness pool → live games. Compliance pages for Stripe are done.
 • *Self-evolution:* Emberion now has a written weakness-discovery protocol — it logs every failure as a capability gap, diagnoses it, and asks the right brain (Joseph = decisions, Claude = code, ChatGPT = strategy) a question answerable in one line. Evolution on AI time, not Joseph's clock.
 
-*3. THE AUTOMATED LOOP (now armed)*
-Every hour, Claude: pulls the latest docs → picks the top gap from the focus rotation → interrogates ChatGPT (VERDICT / ANSWERS / TOP MOVE / RISKS / QUESTIONS BACK) → folds surviving ideas into the constitution/backlog → commits to git → posts here *only when something material changed*. Questions only Joseph can answer land in the *Owner Queue* thread, phrased for one-line replies.
+*3. THE AI COUNCIL LOOP (now armed)*
+Every hour, Claude: pulls the latest docs → picks the top gap from the focus rotation → interrogates *both ChatGPT and Gemini* (VERDICT / ANSWERS / TOP MOVE / RISKS / QUESTIONS BACK) → cross-examines each brain against the other's answer → commits to the *highest-probability path* → folds surviving ideas into the constitution/backlog → commits to git → posts here *only when something material changed*. Every confirmed weakness is inverted into a feature spec (the Weakness-to-Feature Ledger) — a weakness isn't closed until it ships as a strength. Every 4th cycle is a *meta-cycle*: the brains generate the questions we should be asking each other but aren't. Questions only Joseph can answer land in the *Owner Queue* thread, phrased for one-line replies.
 
 *4. MONEY LEAKS FOUND TODAY* :rotating_light:
 • *Two ChatGPT Business workspaces* created 3.5h apart on July 9 — cancel the older one (keep `12f92ddf…`).
