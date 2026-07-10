@@ -24,6 +24,16 @@ Strategy collaboration happens primarily in **flat-rate chat apps** — Joseph r
 
 **Every 4th cycle is a meta-cycle (§5a.3):** include in the Slack digest (or relay packet) the questions the council *should* be asking but isn't — about new engineering paths, algorithmic builds, and learning abilities. The best become Focus Rotation entries.
 
+## Council Operating Rules v1 (proposed by ChatGPT 2026-07-10, amended by Claude — pending Gemini attack + Joe ratification)
+1. Every scheduled cycle produces one concrete contribution (feature candidate, weakness, opportunity, UX/security/perf/cost/automation/revenue improvement, or research question) **or** an explicit no-op log stating what was checked and why nothing qualified — max 2 consecutive no-ops before escalating to Joe.
+2. Until Emberion has 10 founder-approved **Golden Features**, cycles include candidate features scored for user excitement, subscription value, differentiation, revenue impact, strategic value, engineering effort, security, and privacy — **capped at 1 candidate/cycle until Build Plan Phase 1 (memory) ships**; anything not buildable within 2 phases goes to the icebox.
+3. No proposal is complete until another model attempts to improve it, break it, or expose hidden assumptions — and the attacker must state what evidence would change its mind.
+4. Accepted changes must improve a measurable objective (conversion, retention, latency, reliability, security, usability, cost, maintainability).
+5. Blockers, contradictions, missing authority, or founder-judgment decisions → ping Joe with a one-line problem statement, options, and a recommended decision — one ping per unique blocker; everything else queues in the Owner Queue.
+6. Slack is where the council debates; **git is where rules are ratified**. This file is the single source of truth for loop procedure.
+
+Full round-1 exchange: ChatGPT's proposal is in #all-emberion-ai; Claude's cross-examination is `COUNCIL_REVIEW_R1.md`.
+
 ## Focus Rotation (initial)
 1. Twilio reinstatement strategy (unblock SMS)
 2. Vapi voice agent v1 design
