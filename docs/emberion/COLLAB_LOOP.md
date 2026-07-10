@@ -4,25 +4,25 @@
 ## Purpose
 Run Emberion's weakness-discovery protocol on AI time instead of Joseph's clock: every hour, Claude reviews Emberion's state, interrogates the other council brains (ChatGPT Business and Gemini), cross-examines their answers, converts confirmed weaknesses into feature specs, folds the highest-probability path back into the docs/backlog, and reports material changes to Slack.
 
+## Operating mode: RELAY-FIRST (adopted July 10 for token economics)
+Strategy collaboration happens primarily in **flat-rate chat apps** — Joseph relays between ChatGPT Business chat, Gemini chat, and Claude (paste a review request, paste answers back; snippets live in `BUILD_PLAN.md`). The automated API loop is throttled to **once daily** and acts as the synthesizer/safety-net, so tokens are spent on building, not strategy chatter. Frequency of collaboration is unlimited in relay mode because it costs nothing extra.
+
 ## Mechanics
-- **Trigger:** A Routine (cron `0 * * * *`) fires into the Claude Code session hourly.
-- **ChatGPT bridge:** Zapier → ChatGPT (OpenAI) action, tied to Joseph's newest ChatGPT Business workspace (`12f92ddf…`).
-- **Gemini bridge:** Zapier → Google AI Studio (Gemini) `send_prompt`/`conversation` actions.
-- **Slack:** Zapier → Slack action into the "Emberion AI" workspace; summaries posted only when something material changed (silent otherwise, so hourly ≠ spam).
+- **Trigger:** A Routine (cron `0 14 * * *` — daily, 9am Houston) fires into the Claude Code session.
+- **ChatGPT bridge (optional, for automated cycles):** Zapier → ChatGPT (OpenAI) action, tied to Joseph's newest ChatGPT Business workspace (`12f92ddf…`).
+- **Gemini bridge (optional):** Zapier → Google AI Studio (Gemini) `send_prompt`/`conversation` actions.
+- **Slack:** Zapier → Slack action into the "Emberion AI" workspace; summaries posted only when something material changed.
 - **Record:** every accepted improvement is a git commit on `claude/emberion-rules-business-v2lqzh` in `golden-curtain-app` (and later `the-forge-site` once added to the session).
 
-## Each cycle
-1. Pull latest; re-read `EMBERION_CONSTITUTION.md`, `EMBERION_DOSSIER.md`, and the **Focus Rotation** below.
-2. Pick the top open item (never the same focus twice in a row).
-3. Send the same targeted prompt to **every connected brain** (ChatGPT and/or Gemini): current state + the specific gap + request for VERDICT / ANSWERS / TOP MOVE / RISKS / QUESTIONS BACK.
-4. **Cross-examine:** when both brains are connected, show each one the other's TOP MOVE and ask it to attack the weakest assumption. Agreement is signal; disagreement gets logged as a thin spot in our understanding.
-5. **Synthesize by probability (§5a.1):** Claude weighs evidence, effort, risk, and reversibility, commits to the highest-probability path, and records the reasoning.
-6. **Weakness → Feature (§5a.2):** any weakness confirmed this cycle gets an entry in the Weakness-to-Feature Ledger below — it stays open until it ships as a capability.
-7. Update docs/backlog; commit and push.
-8. If material: post a 5-line Slack summary (focus, what the council said, what changed, next focus). If not: stay silent and re-arm.
-9. Any question only Joseph can answer → add to the **Owner Queue** in Slack, phrased for a one-line reply.
+## Each daily cycle
+1. Pull latest; re-read `EMBERION_CONSTITUTION.md`, `BUILD_PLAN.md`, and the ledgers below. Check PR #2 (CI/reviews/merge state).
+2. **Ingest relayed answers:** if Joseph pasted council responses (in chat or Slack) since the last cycle, cross-examine and synthesize them by §5a probability rules, fold results into docs, and lock plan updates.
+3. **Build check:** report progress against the current `BUILD_PLAN.md` phase; if a phase's acceptance criteria pass, mark it done and start the next.
+4. **API council round (only if warranted):** if there is a specific open question the relay hasn't answered AND ChatGPT/Gemini are connected via Zapier, run ONE targeted round (VERDICT / ANSWERS / TOP MOVE / RISKS / QUESTIONS BACK) with cross-examination. Skip when nothing needs it — silence is cheaper than noise.
+5. **Weakness → Feature (§5a.2):** any weakness confirmed gets a Ledger entry; it stays open until it ships as a capability.
+6. Commit and push; post a 5-line Slack digest only when something material changed. Joseph-only questions go to the **Owner Queue**, phrased for one-line replies.
 
-**Every 4th cycle is a meta-cycle (§5a.3):** instead of answering the current focus, ask each brain: "What questions should we be asking each other that we aren't — about new engineering paths, algorithmic builds, and learning abilities for Emberion?" The best answers become new Focus Rotation entries.
+**Every 4th cycle is a meta-cycle (§5a.3):** include in the Slack digest (or relay packet) the questions the council *should* be asking but isn't — about new engineering paths, algorithmic builds, and learning abilities. The best become Focus Rotation entries.
 
 ## Focus Rotation (initial)
 1. Twilio reinstatement strategy (unblock SMS)
