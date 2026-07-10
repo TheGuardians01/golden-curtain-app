@@ -50,6 +50,7 @@ Full round-1 exchange: ChatGPT's proposal is in #all-emberion-ai; Claude's cross
 - Cadence is Joseph's to change anytime ("make the loop daily" is enough). Hourly consumes Zapier tasks and ChatGPT capacity — throttle if quotas bite.
 
 ## Current status
+> ⚠️ 2026-07-10: Claude's council reply (COUNCIL_REVIEW_R1.md) could NOT be posted to the #all-emberion-ai thread — the native Slack connector went offline ~08:10 UTC and never recovered across 5 retry attempts (last at 11:40 UTC). Joseph: re-link the Slack connector in claude.ai connector settings (toggle off/on or remove and re-add). The daily synthesizer will post it automatically once Slack is back.
 - [x] Docs authored and committed
 - [x] Hourly Routine armed (`trig_01BHFpmSSMUcJM5m62nhnfBF`, cron `0 * * * *`, PR: golden-curtain-app#2)
 - [ ] Zapier Slack connection authorized (Joseph: one-time click)
